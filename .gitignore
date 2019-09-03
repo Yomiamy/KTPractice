@@ -12,6 +12,8 @@
 bin/
 gen/
 out/
+.idea/
+gradle/wrapper/gradle-wrapper.jar
 
 # Gradle files
 .gradle/
