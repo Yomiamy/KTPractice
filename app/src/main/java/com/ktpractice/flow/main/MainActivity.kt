@@ -1,9 +1,10 @@
-package com.ktpractice
+package com.ktpractice.flow.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.example.test.api.ApiInstMgr
+import com.ktpractice.R
 import com.ktpractice.api.interfaces.IApi
 import com.ktpractice.model.Person
 import com.ktpractice.response.BaseResponse
@@ -13,7 +14,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
