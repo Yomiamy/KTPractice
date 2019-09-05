@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black_1"
+    android:orientation="vertical"
+    android:padding="@dimen/list_item_person_padding">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_person_avatar"
+        android:layout_width="@dimen/person_avatar_w"
+        android:layout_height="@dimen/person_avatar_h"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintLeft_toRightOf="@id/iv_person_avatar"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_person_avatar">
+
+        <TextView
+            android:id="@+id/tv_name"
+            style="@style/style_person_text_content"
+            android:layout_marginTop="0dp"
+            android:text="dddddddddddddddddddddddddddddddddddddddddddddddddd" />
+
+        <TextView
+            android:id="@+id/tv_position"
+            style="@style/style_person_text_content"
+            android:layout_below="@+id/tv_name"
+            android:text="dddddddddddddddddddddddddddddddddddddddddddddddddd" />
+
+        <TextView
+            android:id="@+id/tv_expertise"
+            style="@style/style_person_text_content"
+            android:layout_below="@+id/tv_position"
+            android:text="ddddddddddddddddddddddddddddddddddddddd" />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
