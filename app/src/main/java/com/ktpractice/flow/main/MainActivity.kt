@@ -3,7 +3,9 @@ package com.ktpractice.flow.main
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.viewpager.widget.ViewPager
 import com.example.test.api.ApiInstMgr
+import com.google.android.material.tabs.TabLayout
 import com.ktpractice.R
 import com.ktpractice.api.interfaces.IApi
 import com.ktpractice.model.Person
@@ -14,42 +16,47 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var mDispose: CompositeDisposable
-    private var mDataList: List<Person>? = null;
+    private lateinit var mViewPager:ViewPager
+    private lateinit var mTbLayout:TabLayout
+
+    private lateinit var mViewModel:MainViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
+        initView()
+        init()
+    }
 
-        mDispose = CompositeDisposable()
-        val api = ApiInstMgr.getInstnace(this, ConstantUtils.Api.SERVER_DOMAIN, IApi::class.java)
-        api?.search("rangers", 0)
-            ?.subscribeOn(Schedulers.io())
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe(object : Observer<BaseResponse<Person>> {
-                override fun onComplete() {}
+    private fun initView() {
+        mViewPager = vp_view_pager
+        mTbLayout = tb_tab_layout
+    }
 
-                override fun onSubscribe(d: Disposable) {
-                    mDispose.add(d)
-                }
+    private fun init() {
+        val titleList = ArrayList<String>()
+        val teamAry = resources.getStringArray(R.array.team_array)
 
-                override fun onNext(t: BaseResponse<Person>) {
-                    mDataList = t.results
-                    Log.d("Test", t.results?.toString() + " : " + t.results?.get(0)?.name)
-                }
+        for(team in teamAry) {
+            val tab = tb_tab_layout.newTab()
+            tab.text = team
 
-                override fun onError(e: Throwable) {
-                    e.printStackTrace()
-                }
-            })
+            tb_tab_layout.addTab(tab)
+        }
+        titleList.addAll(teamAry)
+        mViewPager.adapter = TeamPagerAdapter(this, titleList)
+
+        mTbLayout.setupWithViewPager(mViewPager)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mDispose.clear()
+        mViewModel.onDestroy()
     }
 }
