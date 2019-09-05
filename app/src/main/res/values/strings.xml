@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">KtPractice</string>
+
+    <string-array name="team_array">
+        <item>Rangers</item>
+        <item>Elastic</item>
+        <item>Dynamo</item>
+    </string-array>
 </resources>
