@@ -24,6 +24,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mTbLayout:TabLayout
 
     private lateinit var mViewModel:MainViewModel
+    private lateinit var mTeamNameAry:Array<String>
+    private var mIApi: IApi? = null
+    private lateinit var mDispose: CompositeDisposable
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,32 +34,73 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
         initView()
+        initListener()
         init()
     }
 
     private fun initView() {
         mViewPager = vp_view_pager
         mTbLayout = tb_tab_layout
+
+        mTbLayout.setupWithViewPager(mViewPager)
+    }
+
+    private fun initListener() {
+        mViewPager.addOnPageChangeListener(object:ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {}
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {}
+
+            override fun onPageSelected(position: Int) {
+                search(mTeamNameAry[position])
+            }
+        })
     }
 
     private fun init() {
-        val titleList = ArrayList<String>()
-        val teamAry = resources.getStringArray(R.array.team_array)
+        mTeamNameAry = resources.getStringArray(R.array.team_array)
+        mDispose = CompositeDisposable()
+        mIApi = ApiInstMgr.getInstnace(this, ConstantUtils.Api.SERVER_DOMAIN, IApi::class.java)
 
-        for(team in teamAry) {
+        for(team in mTeamNameAry) {
             val tab = tb_tab_layout.newTab()
             tab.text = team
 
             tb_tab_layout.addTab(tab)
         }
-        titleList.addAll(teamAry)
-        mViewPager.adapter = TeamPagerAdapter(this, titleList)
+        mViewPager.adapter = TeamPagerAdapter(this, mTeamNameAry)
+        search(mTeamNameAry[0])
+    }
 
-        mTbLayout.setupWithViewPager(mViewPager)
+    fun search(team:String) {
+        mIApi?.search(team.toLowerCase(), 0)
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe(object : Observer<BaseResponse<Person>> {
+                override fun onComplete() {}
+
+                override fun onSubscribe(d: Disposable) {
+                    mDispose.add(d)
+                }
+
+                override fun onNext(response: BaseResponse<Person>) {
+                    (mViewPager.adapter as TeamPagerAdapter).addContentList(team, response.results)
+                    Log.d("Test", response.results?.toString() + " : " + response.results?.get(0)?.name)
+                }
+
+                override fun onError(e: Throwable) {
+                    e.printStackTrace()
+                }
+            })
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mViewModel.onDestroy()
+        mDispose.clear()
     }
 }
