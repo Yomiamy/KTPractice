@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="font_size_25">25sp</dimen>
+    <dimen name="font_size_16">16sp</dimen>
+    <dimen name="tab_h">5dp</dimen>
+
+    <dimen name="person_avatar_h">90dp</dimen>
+    <dimen name="person_avatar_w">90dp</dimen>
+    <dimen name="list_item_person_padding">20dp</dimen>
+</resources>
