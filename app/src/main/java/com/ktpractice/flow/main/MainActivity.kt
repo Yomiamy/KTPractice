@@ -3,6 +3,7 @@ package com.ktpractice.flow.main
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.viewpager.widget.ViewPager
 import com.example.test.api.ApiInstMgr
 import com.google.android.material.tabs.TabLayout
@@ -17,13 +18,18 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import android.text.Html
+import androidx.core.content.ContextCompat
+import com.ktpractice.utils.Utils
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mViewPager:ViewPager
     private lateinit var mTbLayout:TabLayout
+    private lateinit var mTvTitle:TextView
 
-    private lateinit var mViewModel:MainViewModel
+    //private lateinit var mViewModel:MainViewModel
     private lateinit var mTeamNameAry:Array<String>
     private var mIApi: IApi? = null
     private lateinit var mDispose: CompositeDisposable
@@ -40,8 +46,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun initView() {
         mViewPager = vp_view_pager
+        mTvTitle = tv_title
         mTbLayout = tb_tab_layout
 
+        val labelColor = ContextCompat.getColor(this, R.color.read_1)
+        Utils.setColor(mTvTitle, "RedSo", "So", labelColor)
         mTbLayout.setupWithViewPager(mViewPager)
     }
 
@@ -100,7 +109,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mViewModel.onDestroy()
+        //mViewModel.onDestroy()
         mDispose.clear()
     }
 }
