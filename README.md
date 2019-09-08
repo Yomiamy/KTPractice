@@ -7,4 +7,6 @@ Include:
 3. RecycerView
 4. Other Kotlin syntax
 
+![image](https://github.com/YomiRY/KtPractice/blob/master/ScreenShot.png)
+
 
