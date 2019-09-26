@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.paging.PagedList
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ktpractice.R
@@ -17,8 +20,8 @@ import com.ktpractice.model.Person
 import de.hdodenhof.circleimageview.CircleImageView
 import java.lang.StringBuilder
 
-class PersonListAdapter(val mCtx: Context, val mPersonList: List<Person>?) :
-    RecyclerView.Adapter<ViewHolder>() {
+class PersonListAdapter(val mCtx: Context) :
+    PagedListAdapter<Person, ViewHolder>(Person.DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var itemLayout = LayoutInflater.from(mCtx).inflate(R.layout.list_item_person, parent, false)
@@ -27,42 +30,39 @@ class PersonListAdapter(val mCtx: Context, val mPersonList: List<Person>?) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = mPersonList?.get(position)
-        val url = if (!TextUtils.isEmpty(item?.avatar)) item?.avatar else item?.url
-        val type = item?.type
+        getItem(position)?.let { item ->
+            val url = if (!TextUtils.isEmpty(item?.avatar)) item?.avatar else item?.url
+            val type = item?.type
 
-        holder.mClPersonContentLayout.visibility = INVISIBLE
-        holder.mIvBanner.visibility = GONE
-        if (TextUtils.equals(type, "employee")) {
-            holder.mClPersonContentLayout.visibility = VISIBLE
+            holder.mClPersonContentLayout.visibility = INVISIBLE
+            holder.mIvBanner.visibility = GONE
+            if (TextUtils.equals(type, "employee")) {
+                holder.mClPersonContentLayout.visibility = VISIBLE
 
-            Glide.with(mCtx).load(url).centerCrop().into(holder.mCivPersonAvatar)
-            holder.mTvPersonName.text = item?.name
-            holder.mTvPosition.text = item?.position
-            holder.mTvExpertise.text = item?.expertise.let {
-                val strBuilder = StringBuilder("")
+                Glide.with(mCtx).load(url).centerCrop().into(holder.mCivPersonAvatar)
+                holder.mTvPersonName.text = item?.name
+                holder.mTvPosition.text = item?.position
+                holder.mTvExpertise.text = item?.expertise.let {
+                    val strBuilder = StringBuilder("")
 
-                for (item in it!!) {
+                    for (item in it!!) {
+                        strBuilder
+                            .append(item)
+                            .append(",")
+                    }
                     strBuilder
-                        .append(item)
-                        .append(",")
+                        .deleteCharAt(strBuilder.length - 1)
+                        .toString()
                 }
-                strBuilder
-                    .deleteCharAt(strBuilder.length - 1)
-                    .toString()
+            } else if (TextUtils.equals(type, "banner")) {
+                holder.mIvBanner.visibility = VISIBLE
+                Glide.with(mCtx).load(url).into(holder.mIvBanner)
             }
-        } else if (TextUtils.equals(type, "banner")) {
-            holder.mIvBanner.visibility = VISIBLE
-            Glide.with(mCtx).load(url).into(holder.mIvBanner)
         }
     }
 
-    override fun getItemCount(): Int {
-        return mPersonList?.size ?: 0
-    }
-
-    class ViewHolder(val layout: View) : RecyclerView.ViewHolder(layout) {
-        val mClPersonContentLayout:ConstraintLayout
+    class ViewHolder(layout: View) : RecyclerView.ViewHolder(layout) {
+        val mClPersonContentLayout: ConstraintLayout
         val mCivPersonAvatar: CircleImageView
         val mTvPersonName: TextView
         val mTvPosition: TextView

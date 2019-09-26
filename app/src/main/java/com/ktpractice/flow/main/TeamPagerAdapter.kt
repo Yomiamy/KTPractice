@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.contains
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
@@ -15,30 +17,34 @@ import com.ktpractice.model.Person
 
 class TeamPagerAdapter(val mCtx: Context, val mTabTeamNameArray: Array<String>) : PagerAdapter() {
 
-    private var mAdapterMap: LinkedHashMap<String, PersonListAdapter> = LinkedHashMap()
     private var mRvList: ArrayList<RecyclerView> = ArrayList()
+    private var mCurTeamName: String? = null
+
+    init {
+        for (i in mTabTeamNameArray.indices) {
+            val rvList = RecyclerView(mCtx)
+            val layoutMgr = LinearLayoutManager(mCtx)
+            layoutMgr.orientation = RecyclerView.VERTICAL
+            rvList.layoutManager = layoutMgr
+
+            rvList.setBackgroundColor(ContextCompat.getColor(mCtx, R.color.black_1))
+            rvList.setHasFixedSize(true)
+            mRvList.add(rvList)
+        }
+    }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val rvList = RecyclerView(mCtx)
-        val layoutMgr = LinearLayoutManager(mCtx)
-        layoutMgr.orientation = RecyclerView.VERTICAL
-        rvList.layoutManager = layoutMgr
+        val rvList = mRvList[position]
 
-        rvList.setBackgroundColor(ContextCompat.getColor(mCtx, R.color.black_1))
-        rvList.setHasFixedSize(true)
-        container.addView(rvList)
-        mRvList.add(rvList)
-        if (position <= mAdapterMap.size - 1) {
-            rvList.adapter = mAdapterMap.let {
-                it.values.toTypedArray()[position]
-            }
+        if (!container.contains(rvList)) {
+            // Avoid add the list duplicate
+            container.addView(rvList)
         }
         return rvList
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         container.removeView(`object` as View)
-        mRvList.remove(`object`)
     }
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
@@ -53,21 +59,21 @@ class TeamPagerAdapter(val mCtx: Context, val mTabTeamNameArray: Array<String>) 
         return mTabTeamNameArray.get(position)
     }
 
-    fun addContentList(team: String, personList: List<Person>?) {
-        val adapter = PersonListAdapter(mCtx, personList)
-        mAdapterMap.put(team, adapter)
+    fun addContentList(team: String, personList: PagedList<Person>?) {
 
-        if (mAdapterMap.size > mRvList.size) return
-        val index = mAdapterMap.let {
+        val index = mTabTeamNameArray.let {
             var index = -1
 
-            for (key in mAdapterMap.keys) {
+            for (key in mTabTeamNameArray) {
                 ++index
                 if (TextUtils.equals(key, team)) break
             }
             index
         }
         val rvList = mRvList.get(index)
+        var adapter:PersonListAdapter = if (!TextUtils.equals(mCurTeamName, team)) PersonListAdapter(mCtx) else (rvList.adapter as PersonListAdapter)
         rvList.adapter = adapter
+
+        adapter.submitList(personList)
     }
 }
