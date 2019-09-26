@@ -20,19 +20,27 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import android.text.Html
 import androidx.core.content.ContextCompat
+import androidx.paging.Config
+import androidx.paging.PagedList
+import androidx.paging.RxPagedListBuilder
+import androidx.paging.toObservable
+import com.ktpractice.model.PersonPageListDataSource
+import com.ktpractice.utils.ConstantUtils.Count.PERSON_LIST_PAGE_PREFETCH_DIST
+import com.ktpractice.utils.ConstantUtils.Count.PERSON_LIST_PAGE_SIZE
 import com.ktpractice.utils.Utils
+import io.reactivex.Observable
 
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var mViewPager:ViewPager
-    private lateinit var mTbLayout:TabLayout
-    private lateinit var mTvTitle:TextView
+    private lateinit var mViewPager: ViewPager
+    private lateinit var mTbLayout: TabLayout
+    private lateinit var mTvTitle: TextView
 
     //private lateinit var mViewModel:MainViewModel
-    private lateinit var mTeamNameAry:Array<String>
     private var mIApi: IApi? = null
     private lateinit var mDispose: CompositeDisposable
+    private lateinit var mTeamNameAry: Array<String>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,56 +63,44 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initListener() {
-        mViewPager.addOnPageChangeListener(object:ViewPager.OnPageChangeListener {
+        mViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
 
             override fun onPageScrolled(
                 position: Int,
                 positionOffset: Float,
                 positionOffsetPixels: Int
-            ) {}
+            ) {
+            }
 
             override fun onPageSelected(position: Int) {
-                search(mTeamNameAry[position])
+                initPageLoading(mTeamNameAry[position])
             }
         })
+    }
+
+    private fun initPageLoading(teamName: String) {
+        val dataSourceFact =
+            PersonPageListDataSource.PersonPageListDataSourceFactory(this, teamName)
+        val pagedListConfig =
+            PagedList.Config.Builder().setPageSize(PERSON_LIST_PAGE_SIZE).setPrefetchDistance(PERSON_LIST_PAGE_PREFETCH_DIST).build()
+
+        dataSourceFact.toObservable(
+            config = pagedListConfig,
+            fetchScheduler = Schedulers.io(),
+            notifyScheduler = AndroidSchedulers.mainThread()
+        ).subscribe {
+            (mViewPager.adapter as TeamPagerAdapter).addContentList(teamName, it)
+        }.apply { mDispose.add(this) }
     }
 
     private fun init() {
         mTeamNameAry = resources.getStringArray(R.array.team_array)
         mDispose = CompositeDisposable()
         mIApi = ApiInstMgr.getInstnace(this, ConstantUtils.Api.SERVER_DOMAIN, IApi::class.java)
-
-        for(team in mTeamNameAry) {
-            val tab = tb_tab_layout.newTab()
-            tab.text = team
-
-            tb_tab_layout.addTab(tab)
-        }
         mViewPager.adapter = TeamPagerAdapter(this, mTeamNameAry)
-        search(mTeamNameAry[0])
-    }
 
-    fun search(team:String) {
-        mIApi?.search(team.toLowerCase(), 0)
-            ?.subscribeOn(Schedulers.io())
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe(object : Observer<BaseResponse<Person>> {
-                override fun onComplete() {}
-
-                override fun onSubscribe(d: Disposable) {
-                    mDispose.add(d)
-                }
-
-                override fun onNext(response: BaseResponse<Person>) {
-                    (mViewPager.adapter as TeamPagerAdapter).addContentList(team, response.results)
-                    Log.d("Test", response.results?.toString() + " : " + response.results?.get(0)?.name)
-                }
-
-                override fun onError(e: Throwable) {
-                    e.printStackTrace()
-                }
-            })
+        initPageLoading(mTeamNameAry[0])
     }
 
     override fun onDestroy() {
