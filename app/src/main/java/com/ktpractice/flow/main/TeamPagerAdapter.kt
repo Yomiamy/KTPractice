@@ -18,9 +18,10 @@ import com.ktpractice.model.Person
 class TeamPagerAdapter(val mCtx: Context, val mTabTeamNameArray: Array<String>) : PagerAdapter() {
 
     private var mRvList: ArrayList<RecyclerView> = ArrayList()
+    private var mCurTeamName: String? = null
 
     init {
-        for(i in mTabTeamNameArray.indices) {
+        for (i in mTabTeamNameArray.indices) {
             val rvList = RecyclerView(mCtx)
             val layoutMgr = LinearLayoutManager(mCtx)
             layoutMgr.orientation = RecyclerView.VERTICAL
@@ -35,7 +36,7 @@ class TeamPagerAdapter(val mCtx: Context, val mTabTeamNameArray: Array<String>) 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val rvList = mRvList[position]
 
-        if(!container.contains(rvList)) {
+        if (!container.contains(rvList)) {
             // Avoid add the list duplicate
             container.addView(rvList)
         }
@@ -59,7 +60,6 @@ class TeamPagerAdapter(val mCtx: Context, val mTabTeamNameArray: Array<String>) 
     }
 
     fun addContentList(team: String, personList: PagedList<Person>?) {
-        val adapter = PersonListAdapter(mCtx, personList)
 
         val index = mTabTeamNameArray.let {
             var index = -1
@@ -71,6 +71,9 @@ class TeamPagerAdapter(val mCtx: Context, val mTabTeamNameArray: Array<String>) 
             index
         }
         val rvList = mRvList.get(index)
+        var adapter:PersonListAdapter = if (!TextUtils.equals(mCurTeamName, team)) PersonListAdapter(mCtx) else (rvList.adapter as PersonListAdapter)
         rvList.adapter = adapter
+
+        adapter.submitList(personList)
     }
 }
