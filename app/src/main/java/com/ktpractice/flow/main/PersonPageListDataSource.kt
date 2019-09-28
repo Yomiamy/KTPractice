@@ -1,16 +1,13 @@
-package com.ktpractice.model
+package com.ktpractice.flow.main
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
-import androidx.paging.Config
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
-import androidx.paging.PagedList
 import com.example.test.api.ApiInstMgr
 import com.ktpractice.api.interfaces.IApi
+import com.ktpractice.model.Person
 import com.ktpractice.utils.ConstantUtils
-import io.reactivex.schedulers.Schedulers
 
 class PersonPageListDataSource(val mCtx: Context, val mTeamName: String) :
     PageKeyedDataSource<Int, Person>() {
@@ -44,7 +41,8 @@ class PersonPageListDataSource(val mCtx: Context, val mTeamName: String) :
 
     class PersonPageListDataSourceFactory(val mCtx: Context, val mTeamName: String) :
         DataSource.Factory<Int, Person>() {
-        override fun create(): DataSource<Int, Person> = PersonPageListDataSource(mCtx, mTeamName)
+        override fun create(): DataSource<Int, Person> =
+            PersonPageListDataSource(mCtx, mTeamName)
     }
 
 }
