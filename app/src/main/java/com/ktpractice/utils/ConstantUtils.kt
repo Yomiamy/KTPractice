@@ -1,6 +1,11 @@
 package com.ktpractice.utils
 
 object ConstantUtils {
+
+    object AppInfo {
+        val DB_NAME = "ktPractice.db"
+    }
+
     object Network {
         val HTTP_LOG_TAG = "HttpLog"
         val DEFAULT_TIMEOUT = 30L

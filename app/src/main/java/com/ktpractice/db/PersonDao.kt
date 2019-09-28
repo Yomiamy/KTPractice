@@ -1,0 +1,27 @@
+package com.ktpractice.db
+
+import androidx.paging.DataSource
+import androidx.room.*
+import com.ktpractice.model.Person
+import io.reactivex.Observable
+import java.util.*
+
+@Dao
+interface PersonDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(post: Person)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(person: List<Person>)
+
+    @Transaction
+    fun insertBatch(personList: List<Person>) {
+        insertAll(personList)
+    }
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun update(person: Person)
+
+    @Query("SELECT * FROM `Person`")
+    fun getPersonList(): DataSource.Factory<Int, Person>
+}
