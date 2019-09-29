@@ -1,5 +1,6 @@
 package com.ktpractice.db
 
+import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.*
 import com.ktpractice.model.Person
@@ -16,12 +17,17 @@ interface PersonDao {
 
     @Transaction
     fun insertBatch(personList: List<Person>) {
-        insertAll(personList)
+        personList.forEach {
+            insert(it)
+        }
     }
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(person: Person)
 
-    @Query("SELECT * FROM `Person`")
-    fun getPersonList(): DataSource.Factory<Int, Person>
+    @Query("SELECT * FROM Person WHERE teamName = :teamName")
+    fun getPersonList(teamName:String): DataSource.Factory<Int, Person>
+
+//    @Query("SELECT * FROM `Person` WHERE teamName = :teamName")
+//    fun getLiveDataPersonList(teamName:String): LiveData<List<Person>>
 }
