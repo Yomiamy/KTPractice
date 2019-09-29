@@ -2,33 +2,24 @@ package com.ktpractice.flow.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
 import androidx.viewpager.widget.ViewPager
 import com.example.test.api.ApiInstMgr
 import com.google.android.material.tabs.TabLayout
 import com.ktpractice.R
 import com.ktpractice.api.interfaces.IApi
-import com.ktpractice.model.Person
-import com.ktpractice.response.BaseResponse
 import com.ktpractice.utils.ConstantUtils
-import io.reactivex.Observer
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import android.text.Html
 import androidx.core.content.ContextCompat
-import androidx.paging.Config
-import androidx.paging.PagedList
-import androidx.paging.RxPagedListBuilder
-import androidx.paging.toObservable
-import com.ktpractice.model.PersonPageListDataSource
+import androidx.lifecycle.Observer
+import androidx.paging.*
+import androidx.room.Room
+import com.ktpractice.db.PersonDao
+import com.ktpractice.db.PersonDb
 import com.ktpractice.utils.ConstantUtils.Count.PERSON_LIST_PAGE_PREFETCH_DIST
 import com.ktpractice.utils.ConstantUtils.Count.PERSON_LIST_PAGE_SIZE
 import com.ktpractice.utils.Utils
-import io.reactivex.Observable
 
 
 class MainActivity : AppCompatActivity() {
@@ -39,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     //private lateinit var mViewModel:MainViewModel
     private var mIApi: IApi? = null
+    private lateinit var mDao: PersonDao
     private lateinit var mDispose: CompositeDisposable
     private lateinit var mTeamNameAry: Array<String>
 
@@ -80,21 +72,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initPageLoading(teamName: String) {
-        val dataSourceFact =
-            PersonPageListDataSource.PersonPageListDataSourceFactory(this, teamName)
-        val pagedListConfig =
-            PagedList.Config.Builder().setPageSize(PERSON_LIST_PAGE_SIZE).setPrefetchDistance(PERSON_LIST_PAGE_PREFETCH_DIST).build()
+        val boundaryCallback = PersonListBoundaryCallback(this, mDao)
 
-        dataSourceFact.toObservable(
-            config = pagedListConfig,
-            fetchScheduler = Schedulers.io(),
-            notifyScheduler = AndroidSchedulers.mainThread()
-        ).subscribe {
-            (mViewPager.adapter as TeamPagerAdapter).addContentList(teamName, it)
-        }.apply { mDispose.add(this) }
+        boundaryCallback.setTeamName(teamName)
+        LivePagedListBuilder(mDao.getPersonList(teamName), PERSON_LIST_PAGE_SIZE)
+            .setBoundaryCallback(boundaryCallback)
+            .build()
+            .observe(this, Observer {
+                val pageAdapter = (mViewPager.adapter as TeamPagerAdapter)
+
+                pageAdapter.addContentList(teamName, it)
+                boundaryCallback.setNextPage(Math.ceil(pageAdapter.getCurListItemCount().toDouble() / PERSON_LIST_PAGE_SIZE).toInt())
+            })
     }
 
     private fun init() {
+        mDao =
+            Room.databaseBuilder(this, PersonDb::class.java, ConstantUtils.AppInfo.DB_NAME).build()
+                .personDaoDao()
         mTeamNameAry = resources.getStringArray(R.array.team_array)
         mDispose = CompositeDisposable()
         mIApi = ApiInstMgr.getInstnace(this, ConstantUtils.Api.SERVER_DOMAIN, IApi::class.java)
