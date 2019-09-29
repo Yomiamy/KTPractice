@@ -1,11 +1,10 @@
 package com.ktpractice.flow.main
 
 import android.content.Context
-import android.icu.lang.UCharacter
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.widget.AbsListView
 import androidx.core.content.ContextCompat
 import androidx.core.view.contains
 import androidx.paging.PagedList
@@ -17,8 +16,8 @@ import com.ktpractice.model.Person
 
 class TeamPagerAdapter(val mCtx: Context, val mTabTeamNameArray: Array<String>) : PagerAdapter() {
 
+    private lateinit var mCurRvList: RecyclerView
     private var mRvList: ArrayList<RecyclerView> = ArrayList()
-    private var mCurTeamName: String? = null
 
     init {
         for (i in mTabTeamNameArray.indices) {
@@ -60,7 +59,6 @@ class TeamPagerAdapter(val mCtx: Context, val mTabTeamNameArray: Array<String>) 
     }
 
     fun addContentList(team: String, personList: PagedList<Person>?) {
-
         val index = mTabTeamNameArray.let {
             var index = -1
 
@@ -70,10 +68,11 @@ class TeamPagerAdapter(val mCtx: Context, val mTabTeamNameArray: Array<String>) 
             }
             index
         }
-        val rvList = mRvList.get(index)
-        var adapter:PersonListAdapter = if (!TextUtils.equals(mCurTeamName, team)) PersonListAdapter(mCtx) else (rvList.adapter as PersonListAdapter)
-        rvList.adapter = adapter
-
+        mCurRvList = mRvList.get(index)
+        var adapter:PersonListAdapter = if (index == -1) PersonListAdapter(mCtx) else (mCurRvList.adapter as PersonListAdapter)
+        mCurRvList.adapter = adapter
         adapter.submitList(personList)
     }
+
+    fun getCurListItemCount():Int = mCurRvList.adapter?.itemCount ?: 0
 }
