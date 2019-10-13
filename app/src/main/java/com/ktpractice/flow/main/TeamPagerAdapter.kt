@@ -69,7 +69,7 @@ class TeamPagerAdapter(val mCtx: Context, val mTabTeamNameArray: Array<String>) 
             index
         }
         mCurRvList = mRvList.get(index)
-        var adapter:PersonListAdapter = if (index == -1) PersonListAdapter(mCtx) else (mCurRvList.adapter as PersonListAdapter)
+        var adapter:PersonListAdapter = if (index == -1 || mCurRvList.adapter == null) PersonListAdapter(mCtx) else (mCurRvList.adapter as PersonListAdapter)
         mCurRvList.adapter = adapter
         adapter.submitList(personList)
     }
