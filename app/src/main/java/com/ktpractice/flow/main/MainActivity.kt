@@ -17,34 +17,29 @@ import androidx.paging.*
 import androidx.room.Room
 import com.ktpractice.db.PersonDao
 import com.ktpractice.db.PersonDb
-import com.ktpractice.utils.ConstantUtils.Count.PERSON_LIST_PAGE_PREFETCH_DIST
+import com.ktpractice.flow.main.MainFlowContract.IMainViewModel
+import com.ktpractice.flow.main.MainFlowContract.IMainFlowView
+import com.ktpractice.model.Person
 import com.ktpractice.utils.ConstantUtils.Count.PERSON_LIST_PAGE_SIZE
 import com.ktpractice.utils.Utils
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), IMainFlowView {
 
     private lateinit var mViewPager: ViewPager
     private lateinit var mTbLayout: TabLayout
     private lateinit var mTvTitle: TextView
 
-    //private lateinit var mViewModel:MainViewModel
-    private var mIApi: IApi? = null
-    private lateinit var mDao: PersonDao
-    private lateinit var mDispose: CompositeDisposable
-    private lateinit var mTeamNameAry: Array<String>
-
+    private var mViewModel:IMainViewModel = MainViewModel(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-        initView()
-        initListener()
-        init()
+        mViewModel.onCreate()
     }
 
-    private fun initView() {
+    override fun initView() {
         mViewPager = vp_view_pager
         mTvTitle = tv_title
         mTbLayout = tb_tab_layout
@@ -52,6 +47,8 @@ class MainActivity : AppCompatActivity() {
         val labelColor = ContextCompat.getColor(this, R.color.read_1)
         Utils.setColor(mTvTitle, "RedSo", "So", labelColor)
         mTbLayout.setupWithViewPager(mViewPager)
+
+        initListener()
     }
 
     private fun initListener() {
@@ -66,41 +63,36 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onPageSelected(position: Int) {
-                initPageLoading(mTeamNameAry[position])
+                mViewModel.onPageSelected(position)
             }
         })
     }
 
-    private fun initPageLoading(teamName: String) {
-        val boundaryCallback = PersonListBoundaryCallback(this, mDao)
+    override fun initPageLoading(team: String, personList: PagedList<Person>?) {
+        val pageAdapter = (mViewPager.adapter as TeamPagerAdapter)
 
-        boundaryCallback.setTeamName(teamName)
-        LivePagedListBuilder(mDao.getPersonList(teamName), PERSON_LIST_PAGE_SIZE)
-            .setBoundaryCallback(boundaryCallback)
-            .build()
-            .observe(this, Observer {
-                val pageAdapter = (mViewPager.adapter as TeamPagerAdapter)
-
-                pageAdapter.addContentList(teamName, it)
-                boundaryCallback.setNextPage(Math.ceil(pageAdapter.getCurListItemCount().toDouble() / PERSON_LIST_PAGE_SIZE).toInt())
-            })
+        pageAdapter.addContentList(team, personList)
+        mViewModel.calculateNextPage(pageAdapter.getCurListItemCount())
     }
 
-    private fun init() {
-        mDao =
-            Room.databaseBuilder(this, PersonDb::class.java, ConstantUtils.AppInfo.DB_NAME).build()
-                .personDaoDao()
-        mTeamNameAry = resources.getStringArray(R.array.team_array)
-        mDispose = CompositeDisposable()
-        mIApi = ApiInstMgr.getInstnace(this, ConstantUtils.Api.SERVER_DOMAIN, IApi::class.java)
-        mViewPager.adapter = TeamPagerAdapter(this, mTeamNameAry)
 
-        initPageLoading(mTeamNameAry[0])
+    override fun initTabs(tabTeamNameArray: Array<String>) {
+        mViewPager.adapter = TeamPagerAdapter(this, tabTeamNameArray)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mViewModel.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mViewModel.onPause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        //mViewModel.onDestroy()
-        mDispose.clear()
+        mViewModel.onDestroy()
+
     }
 }
