@@ -7,52 +7,45 @@ import androidx.viewpager.widget.ViewPager
 import com.example.test.api.ApiInstMgr
 import com.google.android.material.tabs.TabLayout
 import com.ktpractice.R
-import com.ktpractice.api.interfaces.IApi
-import com.ktpractice.utils.ConstantUtils
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
 import androidx.paging.*
-import androidx.room.Room
-import com.ktpractice.db.PersonDao
-import com.ktpractice.db.PersonDb
+import com.ktpractice.databinding.ActivityMainBinding
 import com.ktpractice.flow.main.MainFlowContract.IMainViewModel
 import com.ktpractice.flow.main.MainFlowContract.IMainFlowView
 import com.ktpractice.model.Person
-import com.ktpractice.utils.ConstantUtils.Count.PERSON_LIST_PAGE_SIZE
 import com.ktpractice.utils.Utils
 
 
 class MainActivity : AppCompatActivity(), IMainFlowView {
 
-    private lateinit var mViewPager: ViewPager
-    private lateinit var mTbLayout: TabLayout
-    private lateinit var mTvTitle: TextView
-
-    private var mViewModel:IMainViewModel = MainViewModel(this)
+    private lateinit var mBinding:ActivityMainBinding
+    private lateinit var mViewModel: MainViewModel<*>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
+        mViewModel = ViewModelProviders.of(this, MainViewModelFactory(this)).get(MainViewModel::class.java)
         mViewModel.onCreate()
     }
 
     override fun initView() {
-        mViewPager = vp_view_pager
-        mTvTitle = tv_title
-        mTbLayout = tb_tab_layout
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        mBinding.lifecycleOwner = this
+        mBinding.viewModel = mViewModel
 
         val labelColor = ContextCompat.getColor(this, R.color.read_1)
-        Utils.setColor(mTvTitle, "RedSo", "So", labelColor)
-        mTbLayout.setupWithViewPager(mViewPager)
+        Utils.setColor(mBinding.tvTitle, "RedSo", "So", labelColor)
+        mBinding.tbTabLayout.setupWithViewPager(mBinding.vpViewPager)
 
         initListener()
     }
 
     private fun initListener() {
-        mViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        mBinding.vpViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
 
             override fun onPageScrolled(
@@ -69,7 +62,7 @@ class MainActivity : AppCompatActivity(), IMainFlowView {
     }
 
     override fun initPageLoading(team: String, personList: PagedList<Person>?) {
-        val pageAdapter = (mViewPager.adapter as TeamPagerAdapter)
+        val pageAdapter = (mBinding.vpViewPager.adapter as TeamPagerAdapter)
 
         pageAdapter.addContentList(team, personList)
         mViewModel.calculateNextPage(pageAdapter.getCurListItemCount())
@@ -77,7 +70,7 @@ class MainActivity : AppCompatActivity(), IMainFlowView {
 
 
     override fun initTabs(tabTeamNameArray: Array<String>) {
-        mViewPager.adapter = TeamPagerAdapter(this, tabTeamNameArray)
+        mBinding.vpViewPager.adapter = TeamPagerAdapter(this, tabTeamNameArray)
     }
 
     override fun onResume() {

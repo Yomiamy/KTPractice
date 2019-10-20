@@ -3,10 +3,11 @@ package com.ktpractice.flow.main
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import com.ktpractice.flow.main.MainFlowContract.IMainFlowView
 import com.ktpractice.flow.main.MainFlowContract.IMainViewModel
 
-class MainViewModel<T:LifecycleOwner>(val mView: T):IMainViewModel where T:Context, T:IMainFlowView{
+class MainViewModel<T>(val mView: T): ViewModel(), IMainViewModel where T:Context, T:IMainFlowView, T:LifecycleOwner{
 
     private lateinit var mRepository:MainRepository
     private lateinit var mTeamNameAry:Array<String>
