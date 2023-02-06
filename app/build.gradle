@@ -4,14 +4,14 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.0"
+    compileSdkVersion 32
+    buildToolsVersion "32.0.0"
     defaultConfig {
-        applicationId "com.ktpractice"
-        minSdkVersion 16
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        applicationId "com.imformation_checker"
+        minSdkVersion 23
+        targetSdkVersion 32
+        versionCode 6
+        versionName "1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -90,4 +90,6 @@ dependencies {
     // Chunk
     debugImplementation 'com.readystatesoftware.chuck:library:1.1.0'
     releaseImplementation 'com.readystatesoftware.chuck:library-no-op:1.1.0'
+
+    implementation 'com.google.android.material:material:1.0.0'
 }
