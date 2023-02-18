@@ -1,9 +1,8 @@
 package com.ktpractice.api.interfaces
 
 import com.ktpractice.model.Person
-import com.ktpractice.response.BaseResponse
+import com.ktpractice.api.response.BaseResponse
 import io.reactivex.Observable
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
