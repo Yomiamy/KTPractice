@@ -56,10 +56,13 @@ dependencies {
     implementation "androidx.room:room-guava:2.1.0"
 
     // Jetpack - Lifecycle
-        // ViewModel and LiveData
+      // Lifecycle scope
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
+      // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
     kapt "androidx.lifecycle:lifecycle-compiler:2.1.0"
-        // ReactiveStreams support for LiveData
+      // ReactiveStreams support for LiveData
     implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:2.1.0"
 
     // Glide
