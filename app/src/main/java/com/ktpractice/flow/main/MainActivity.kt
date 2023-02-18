@@ -2,90 +2,75 @@ package com.ktpractice.flow.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
 import androidx.viewpager.widget.ViewPager
-import com.example.test.api.ApiInstMgr
-import com.google.android.material.tabs.TabLayout
 import com.ktpractice.R
-import kotlinx.android.synthetic.main.activity_main.*
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
-import androidx.paging.*
 import com.ktpractice.databinding.ActivityMainBinding
-import com.ktpractice.flow.main.MainFlowContract.IMainViewModel
-import com.ktpractice.flow.main.MainFlowContract.IMainFlowView
-import com.ktpractice.model.Person
 import com.ktpractice.utils.Utils
 
 
-class MainActivity : AppCompatActivity(), IMainFlowView {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var mBinding:ActivityMainBinding
     private lateinit var mViewModel: MainViewModel<*>
+    private lateinit var mTeamNameAry:Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        mTeamNameAry = resources.getStringArray(R.array.team_array)
         mViewModel = ViewModelProviders.of(this, MainViewModelFactory(this)).get(MainViewModel::class.java)
-        mViewModel.onCreate()
+        mBinding = DataBindingUtil.setContentView<ActivityMainBinding?>(this, R.layout.activity_main).apply {
+            lifecycleOwner = this@MainActivity
+            viewModel = mViewModel
+        }
+
+        initView()
+        initListener()
+        initData()
+        initObserver()
     }
 
-    override fun initView() {
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        mBinding.lifecycleOwner = this
-        mBinding.viewModel = mViewModel
-
+    private fun initView() {
         val labelColor = ContextCompat.getColor(this, R.color.read_1)
         Utils.setColor(mBinding.tvTitle, "RedSo", "So", labelColor)
-        mBinding.tbTabLayout.setupWithViewPager(mBinding.vpViewPager)
 
-        initListener()
+        mBinding.vpViewPager.adapter = TeamPagerAdapter(this, mTeamNameAry)
+        mBinding.tbTabLayout.setupWithViewPager(mBinding.vpViewPager)
     }
 
     private fun initListener() {
         mBinding.vpViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {}
+            override fun onPageScrollStateChanged(state: Int) = Unit
 
             override fun onPageScrolled(
                 position: Int,
                 positionOffset: Float,
                 positionOffsetPixels: Int
-            ) {
-            }
+            ) = Unit
 
-            override fun onPageSelected(position: Int) {
-                mViewModel.onPageSelected(position)
-            }
+            override fun onPageSelected(position: Int) = mViewModel.loadPageByTeamName(mTeamNameAry[position])
         })
     }
 
-    override fun initPageLoading(team: String, personList: PagedList<Person>?) {
-        val pageAdapter = (mBinding.vpViewPager.adapter as TeamPagerAdapter)
-
-        pageAdapter.addContentList(team, personList)
-        mViewModel.calculateNextPage(pageAdapter.getCurListItemCount())
+    private fun initData() {
+        mViewModel.loadPageByTeamName(mTeamNameAry[0])
+        mViewModel.calculateNextPage(0)
     }
 
+    private fun initObserver() {
+        mViewModel.mainPageUiState.observe(this) { state ->
+            if(state == null
+                || state.teamName.isNullOrEmpty()
+                || state.personList.isNullOrEmpty()) {
+                return@observe
+            }
 
-    override fun initTabs(tabTeamNameArray: Array<String>) {
-        mBinding.vpViewPager.adapter = TeamPagerAdapter(this, tabTeamNameArray)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mViewModel.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mViewModel.onPause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mViewModel.onDestroy()
-
+            val pageAdapter = (mBinding.vpViewPager.adapter as TeamPagerAdapter)
+            pageAdapter.addContentList(state.teamName, state.personList)
+            mViewModel.calculateNextPage(pageAdapter.getCurListItemCount())
+        }
     }
 }

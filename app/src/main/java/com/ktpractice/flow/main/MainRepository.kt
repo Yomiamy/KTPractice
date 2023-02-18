@@ -15,24 +15,12 @@ import com.ktpractice.model.Person
 import com.ktpractice.utils.ConstantUtils
 import com.ktpractice.utils.ConstantUtils.Count.PERSON_LIST_PAGE_SIZE
 import io.reactivex.disposables.CompositeDisposable
+import kotlin.math.ceil
 
 class MainRepository(val mCtx:Context) {
 
-    private var mIApi: IApi? = null
-    private var mDao: PersonDao
+    private var mDao: PersonDao = Room.databaseBuilder(mCtx, PersonDb::class.java, ConstantUtils.AppInfo.DB_NAME).build().personDaoDao()
     private lateinit var mCurBoundaryCallback:PersonListBoundaryCallback
-    private var mDispose: CompositeDisposable
-    // Init the team name from string resources
-    val mTeamNameAry: Array<String>
-        get() {
-            return mCtx.resources.getStringArray(R.array.team_array)
-        }
-
-    init {
-        mDao = Room.databaseBuilder(mCtx, PersonDb::class.java, ConstantUtils.AppInfo.DB_NAME).build().personDaoDao()
-        mDispose = CompositeDisposable()
-        mIApi = ApiInstMgr.getInstnace(mCtx, ConstantUtils.Api.SERVER_DOMAIN, IApi::class.java)
-    }
 
     fun getPersonList(teamName:String): LiveData<PagedList<Person>> {
         mCurBoundaryCallback = PersonListBoundaryCallback(mCtx, mDao)
@@ -44,10 +32,6 @@ class MainRepository(val mCtx:Context) {
     }
 
     fun calculateNextPage(curListItemCount:Int) {
-        mCurBoundaryCallback.setNextPage(Math.ceil(curListItemCount.toDouble() / PERSON_LIST_PAGE_SIZE).toInt())
-    }
-
-    internal fun onDestroy() {
-        mDispose.clear()
+        mCurBoundaryCallback.setNextPage(ceil(curListItemCount.toDouble() / PERSON_LIST_PAGE_SIZE).toInt())
     }
 }
