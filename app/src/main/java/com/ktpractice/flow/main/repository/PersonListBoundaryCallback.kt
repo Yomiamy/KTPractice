@@ -1,19 +1,15 @@
-package com.ktpractice.flow.main
+package com.ktpractice.flow.main.repository
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
-import androidx.room.Room
 import com.example.test.api.ApiInstMgr
 import com.ktpractice.api.interfaces.IApi
 import com.ktpractice.db.PersonDao
-import com.ktpractice.db.PersonDb
 import com.ktpractice.model.Person
 import com.ktpractice.utils.ConstantUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import androidx.lifecycle.MutableLiveData
 
 
 class PersonListBoundaryCallback(mCtx: Context, val mDao:PersonDao) :

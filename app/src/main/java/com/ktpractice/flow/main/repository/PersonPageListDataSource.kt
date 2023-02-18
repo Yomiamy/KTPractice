@@ -1,4 +1,4 @@
-package com.ktpractice.flow.main
+package com.ktpractice.flow.main.repository
 
 import android.annotation.SuppressLint
 import android.content.Context

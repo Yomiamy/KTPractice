@@ -1,4 +1,4 @@
-package com.ktpractice.flow.main
+package com.ktpractice.flow.main.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.ktpractice.databinding.ActivityMainBinding
+import com.ktpractice.flow.main.viewmodel.MainViewModel
 import com.ktpractice.utils.Utils
 
 

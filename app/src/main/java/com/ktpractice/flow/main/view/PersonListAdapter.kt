@@ -1,4 +1,4 @@
-package com.ktpractice.flow.main
+package com.ktpractice.flow.main.view
 
 import android.content.Context
 import android.text.TextUtils
@@ -9,13 +9,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.paging.PagedList
 import androidx.paging.PagedListAdapter
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ktpractice.R
-import com.ktpractice.flow.main.PersonListAdapter.ViewHolder
+import com.ktpractice.flow.main.view.PersonListAdapter.ViewHolder
 import com.ktpractice.model.Person
 import de.hdodenhof.circleimageview.CircleImageView
 import java.lang.StringBuilder
