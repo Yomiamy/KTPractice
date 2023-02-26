@@ -3,10 +3,7 @@ package com.ktpractice.flow.main.viewmodel
 import android.content.Context
 import androidx.lifecycle.*
 import com.ktpractice.flow.main.repository.MainRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class MainViewModel<T>(val context: T): ViewModel() where T:Context, T: LifecycleOwner {
@@ -18,8 +15,8 @@ class MainViewModel<T>(val context: T): ViewModel() where T:Context, T: Lifecycl
     val mainPageUiState:StateFlow<MainPageUiState?> = mMainPageUiState.asStateFlow()
 
     fun loadPageByTeamName(teamName: String) {
-        mRepository.getPersonList(teamName).observe(context) {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            mRepository.getPersonList(teamName).collect {
                 mMainPageUiState.value = MainPageUiState(teamName, it)
             }
         }
