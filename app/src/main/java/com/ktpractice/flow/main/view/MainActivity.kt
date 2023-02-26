@@ -6,10 +6,15 @@ import androidx.viewpager.widget.ViewPager
 import com.ktpractice.R
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.ktpractice.databinding.ActivityMainBinding
 import com.ktpractice.flow.main.viewmodel.MainViewModel
 import com.ktpractice.utils.Utils
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -62,16 +67,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initObserver() {
-        mViewModel.mainPageUiState.observe(this) { state ->
-            if(state == null
-                || state.teamName.isNullOrEmpty()
-                || state.personList.isNullOrEmpty()) {
-                return@observe
-            }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mViewModel.mainPageUiState.collect { state ->
+                    if(state == null
+                        || state.teamName.isNullOrEmpty()
+                        || state.personList.isNullOrEmpty()) {
+                        return@collect
+                    }
 
-            val pageAdapter = (mBinding.vpViewPager.adapter as TeamPagerAdapter)
-            pageAdapter.addContentList(state.teamName, state.personList)
-            mViewModel.calculateNextPage(pageAdapter.getCurListItemCount())
+                    val pageAdapter = (mBinding.vpViewPager.adapter as TeamPagerAdapter)
+                    pageAdapter.addContentList(state.teamName, state.personList)
+                    mViewModel.calculateNextPage(pageAdapter.getCurListItemCount())
+                }
+            }
         }
     }
 }
