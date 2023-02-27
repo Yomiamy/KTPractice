@@ -16,7 +16,7 @@ class MainViewModel<T>(val context: T): ViewModel() where T:Context, T: Lifecycl
 
     fun loadPageByTeamName(teamName: String) {
         viewModelScope.launch {
-            mRepository.getPersonList(teamName).collect {
+            mRepository.getPersonList(teamName).collectLatest {
                 mMainPageUiState.value = MainPageUiState(teamName, it)
             }
         }

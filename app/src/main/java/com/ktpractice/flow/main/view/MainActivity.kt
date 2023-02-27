@@ -14,6 +14,7 @@ import com.ktpractice.databinding.ActivityMainBinding
 import com.ktpractice.flow.main.viewmodel.MainViewModel
 import com.ktpractice.utils.Utils
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -69,11 +70,11 @@ class MainActivity : AppCompatActivity() {
     private fun initObserver() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mViewModel.mainPageUiState.collect { state ->
+                mViewModel.mainPageUiState.collectLatest { state ->
                     if(state == null
                         || state.teamName.isNullOrEmpty()
                         || state.personList.isNullOrEmpty()) {
-                        return@collect
+                        return@collectLatest
                     }
 
                     val pageAdapter = (mBinding.vpViewPager.adapter as TeamPagerAdapter)
