@@ -1,10 +1,9 @@
-package com.ktpractice.flow.main
+package com.ktpractice.flow.main.view
 
 import android.content.Context
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AbsListView
 import androidx.core.content.ContextCompat
 import androidx.core.view.contains
 import androidx.paging.PagedList
@@ -69,7 +68,7 @@ class TeamPagerAdapter(val mCtx: Context, val mTabTeamNameArray: Array<String>) 
             index
         }
         mCurRvList = mRvList.get(index)
-        var adapter:PersonListAdapter = if (index == -1 || mCurRvList.adapter == null) PersonListAdapter(mCtx) else (mCurRvList.adapter as PersonListAdapter)
+        var adapter: PersonListAdapter = if (index == -1 || mCurRvList.adapter == null) PersonListAdapter(mCtx) else (mCurRvList.adapter as PersonListAdapter)
         mCurRvList.adapter = adapter
         adapter.submitList(personList)
     }

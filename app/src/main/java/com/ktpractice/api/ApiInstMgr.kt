@@ -14,17 +14,17 @@ class ApiInstMgr {
             .setLenient()
             .create()
 
-        inline fun <InterfaceTypeClz> getInstnace(ctx: Context, serverUrl: String, apiInterfClz: Class<InterfaceTypeClz>): InterfaceTypeClz? {
-            if (!sUrlRetroMap.containsKey(serverUrl)) {
+        fun <InterfaceTypeClz> getInstnace(ctx: Context, serverUrl: String, apiInterfClz: Class<InterfaceTypeClz>): InterfaceTypeClz? {
+            if (!sUrlRetroMap.contains(serverUrl)) {
                 val retrofit = Retrofit.Builder()
                     .baseUrl(serverUrl)
                     .client(Client.getInstance(ctx))
                     .addConverterFactory(GsonConverterFactory.create(sGson))
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build()
-                sUrlRetroMap.put(serverUrl, retrofit)
+                sUrlRetroMap[serverUrl] = retrofit
             }
-            return sUrlRetroMap.get(serverUrl)?.create(apiInterfClz)
+            return sUrlRetroMap[serverUrl]?.create(apiInterfClz)
         }
     }
 }

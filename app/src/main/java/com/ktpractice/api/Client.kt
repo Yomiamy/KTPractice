@@ -26,12 +26,12 @@ class Client private constructor() {
                     }
                 })
                 HTTP_LOGGING_INTERCEPTOR.level = HttpLoggingInterceptor.Level.BODY
-                val CHUNK_INTERCEPTOR = ChuckInterceptor(ctx).showNotification(BuildConfig.DEBUG)
+                //val CHUNK_INTERCEPTOR = ChuckInterceptor(ctx).showNotification(BuildConfig.DEBUG)
 
                 sClient = OkHttpClient().newBuilder()
                     .addNetworkInterceptor(StethoInterceptor())
                     .addInterceptor(HTTP_LOGGING_INTERCEPTOR)
-                    .addInterceptor(CHUNK_INTERCEPTOR)
+//                    .addInterceptor(CHUNK_INTERCEPTOR)
                     .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                     .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                     .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
