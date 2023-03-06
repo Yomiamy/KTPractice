@@ -14,12 +14,12 @@ import com.ktpractice.utils.ConstantUtils.Count.PERSON_LIST_PAGE_SIZE
 import kotlinx.coroutines.flow.Flow
 import kotlin.math.ceil
 
-class MainRepository(val mCtx:Context) {
+class MainRepository(private val mCtx:Context):IMainRepository {
 
     private var mDao: PersonDao = Room.databaseBuilder(mCtx, PersonDb::class.java, ConstantUtils.AppInfo.DB_NAME).build().personDaoDao()
     private lateinit var mCurBoundaryCallback: PersonListBoundaryCallback
 
-    fun getPersonList(teamName:String): Flow<PagedList<Person>> {
+    override fun getPersonList(teamName:String): Flow<PagedList<Person>> {
         mCurBoundaryCallback = PersonListBoundaryCallback(mCtx, mDao)
 
         mCurBoundaryCallback.setTeamName(teamName)
@@ -28,7 +28,7 @@ class MainRepository(val mCtx:Context) {
             .build().asFlow()
     }
 
-    fun calculateNextPage(curListItemCount:Int) {
+    override fun calculateNextPage(curListItemCount:Int) {
         mCurBoundaryCallback.setNextPage(ceil(curListItemCount.toDouble() / PERSON_LIST_PAGE_SIZE).toInt())
     }
 }
