@@ -3,11 +3,13 @@ package com.ktpractice.flow.main.viewmodel
 import android.content.Context
 import androidx.lifecycle.*
 import com.ktpractice.flow.main.repository.MainRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel<T>(val context: T): ViewModel() where T:Context, T: LifecycleOwner {
-
+@HiltViewModel
+class MainViewModel @Inject constructor(context: Context): ViewModel() {
 
     private val mMainPageUiState: MutableStateFlow<MainPageUiState?> = MutableStateFlow(null)
     private val mRepository: MainRepository = MainRepository(context)
