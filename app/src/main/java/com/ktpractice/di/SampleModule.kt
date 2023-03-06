@@ -23,4 +23,7 @@ object SampleModule {
 
     @Provides
     fun provideSampleObject(@ApplicationContext context: Context):SampleClz = SampleClz(context)
+
+    @Provides
+    fun provideContext(@ApplicationContext context: Context):Context = context
 }
