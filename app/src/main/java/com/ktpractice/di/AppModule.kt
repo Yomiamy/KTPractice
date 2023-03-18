@@ -1,8 +1,12 @@
 package com.ktpractice.di
 
 import android.content.Context
+import androidx.room.Room
+import com.ktpractice.db.PersonDao
+import com.ktpractice.db.PersonDb
 import com.ktpractice.flow.main.repository.IMainRepository
 import com.ktpractice.flow.main.repository.MainRepository
+import com.ktpractice.utils.ConstantUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,5 +23,9 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideMainRepository(context: Context): IMainRepository = MainRepository(context)
+    fun providePersonDao(context: Context): PersonDao = Room.databaseBuilder(context, PersonDb::class.java, ConstantUtils.AppInfo.DB_NAME).build().personDao()
+
+    @Singleton
+    @Provides
+    fun provideMainRepository(context: Context, dao: PersonDao): IMainRepository = MainRepository(context, dao)
 }
