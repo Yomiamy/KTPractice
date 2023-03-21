@@ -2,6 +2,7 @@ package com.ktpractice.di
 
 import android.content.Context
 import androidx.room.Room
+import com.ktpractice.db.MIGRATION_1_2
 import com.ktpractice.db.PersonDao
 import com.ktpractice.db.PersonDb
 import com.ktpractice.flow.main.repository.IMainRepository
@@ -23,7 +24,12 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providePersonDao(context: Context): PersonDao = Room.databaseBuilder(context, PersonDb::class.java, ConstantUtils.AppInfo.DB_NAME).build().personDao()
+    fun providePersonDao(context: Context): PersonDao = Room
+        .databaseBuilder(context, PersonDb::class.java, ConstantUtils.AppInfo.DB_NAME)
+        .addMigrations(MIGRATION_1_2)
+        .fallbackToDestructiveMigration()
+        .build()
+        .personDao()
 
     @Singleton
     @Provides

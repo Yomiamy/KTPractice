@@ -16,7 +16,8 @@ data class Person(
     var expertise: List<String>?,
     var avatar: String?,
     var url: String?,
-    var teamName:String
+    var teamName:String,
+    var address:String?
 ) {
     companion object {
         val DIFF_CALLBACK = object :
