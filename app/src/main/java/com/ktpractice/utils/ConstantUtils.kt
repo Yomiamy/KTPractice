@@ -7,7 +7,6 @@ object ConstantUtils {
     }
 
     object Network {
-        const val HTTP_LOG_TAG = "HttpLog"
         const val DEFAULT_TIMEOUT = 30L
     }
 
