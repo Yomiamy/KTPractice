@@ -1,6 +1,7 @@
 package com.ktpractice.flow.main.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.paging.PagedList
 import com.ktpractice.api.ApiInstMgr
 import com.ktpractice.api.interfaces.IApi
@@ -14,6 +15,10 @@ import io.reactivex.schedulers.Schedulers
 
 class PersonListBoundaryCallback(mCtx: Context, val mDao:PersonDao) :
     PagedList.BoundaryCallback<Person>() {
+
+    companion object {
+        const val TAG = "PersonListBoundaryCallback"
+    }
 
     private var mIApi: IApi? =
         ApiInstMgr.getInstance(mCtx, ConstantUtils.Api.SERVER_DOMAIN, IApi::class.java)
@@ -40,6 +45,7 @@ class PersonListBoundaryCallback(mCtx: Context, val mDao:PersonDao) :
     }
 
     private fun fetchFromRemote() {
+        Log.d(TAG, "$mTeamName Page = $mNextPage")
         mIApi?.search(mTeamName.toLowerCase(), mNextPage)
             ?.subscribeOn(Schedulers.io())
             ?.map { response ->
