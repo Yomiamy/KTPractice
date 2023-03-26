@@ -11,9 +11,11 @@ import com.ktpractice.utils.ConstantUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
-class PersonListBoundaryCallback(mCtx: Context, val mDao:PersonDao) :
+class PersonListBoundaryCallback(mCtx: Context, val mDao: PersonDao) :
     PagedList.BoundaryCallback<Person>() {
 
     companion object {
@@ -22,11 +24,10 @@ class PersonListBoundaryCallback(mCtx: Context, val mDao:PersonDao) :
 
     private var mIApi: IApi? =
         ApiInstMgr.getInstance(mCtx, ConstantUtils.Api.SERVER_DOMAIN, IApi::class.java)
-    private val mDispose: CompositeDisposable = CompositeDisposable()
     private var mTeamName = ""
     private var mNextPage = 0
 
-    fun setNextPage(page:Int) {
+    fun setNextPage(page: Int) {
         this.mNextPage = page
     }
 
@@ -36,37 +37,28 @@ class PersonListBoundaryCallback(mCtx: Context, val mDao:PersonDao) :
 
     override fun onZeroItemsLoaded() {
         super.onZeroItemsLoaded()
-        fetchFromRemote()
+        GlobalScope.launch {
+            fetchFromRemote()
+        }
     }
 
     override fun onItemAtEndLoaded(itemAtEnd: Person) {
         super.onItemAtEndLoaded(itemAtEnd)
-        fetchFromRemote()
+        GlobalScope.launch {
+            fetchFromRemote()
+        }
     }
 
-    private fun fetchFromRemote() {
+    private suspend fun fetchFromRemote() {
         Log.d(TAG, "$mTeamName Page = $mNextPage")
-        mIApi?.search(mTeamName.toLowerCase(), mNextPage)
-            ?.subscribeOn(Schedulers.io())
-            ?.map { response ->
-                if (response.results != null) {
-                    ++mNextPage
-                    response.results!!.forEach {
-                        it.teamName = mTeamName
-                    }
-                    mDao.insertAll(response.results!!)
-                }
-                response.results
-            }
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.doFinally {
-                mDispose.clear()
-            }
-            ?.subscribe({}, { error -> error.printStackTrace() })
-            .apply {
-                if (this == null) return
+        val response = mIApi?.search(mTeamName.toLowerCase(), mNextPage)
 
-                mDispose.add(this)
+        if (response != null && !response.results.isNullOrEmpty()) {
+            ++mNextPage
+            response.results!!.forEach {
+                it.teamName = mTeamName
             }
+            mDao.insertAll(response.results!!)
+        }
     }
 }
