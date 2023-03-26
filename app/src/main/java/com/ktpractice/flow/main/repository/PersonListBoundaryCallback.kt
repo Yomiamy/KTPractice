@@ -38,14 +38,22 @@ class PersonListBoundaryCallback(mCtx: Context, val mDao: PersonDao) :
     override fun onZeroItemsLoaded() {
         super.onZeroItemsLoaded()
         GlobalScope.launch {
-            fetchFromRemote()
+            try {
+                fetchFromRemote()
+            } catch (e:Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
     override fun onItemAtEndLoaded(itemAtEnd: Person) {
         super.onItemAtEndLoaded(itemAtEnd)
         GlobalScope.launch {
-            fetchFromRemote()
+            try {
+                fetchFromRemote()
+            } catch (e:Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
