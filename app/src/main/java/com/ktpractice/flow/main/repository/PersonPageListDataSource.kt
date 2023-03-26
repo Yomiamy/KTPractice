@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
-import com.example.test.api.ApiInstMgr
+import com.ktpractice.api.ApiInstMgr
 import com.ktpractice.api.interfaces.IApi
 import com.ktpractice.model.Person
 import com.ktpractice.utils.ConstantUtils
@@ -12,7 +12,7 @@ import com.ktpractice.utils.ConstantUtils
 class PersonPageListDataSource(val mCtx: Context, val mTeamName: String) :
     PageKeyedDataSource<Int, Person>() {
 
-    private var mIApi: IApi? = ApiInstMgr.getInstnace(mCtx, ConstantUtils.Api.SERVER_DOMAIN, IApi::class.java)
+    private var mIApi: IApi? = ApiInstMgr.getInstance(mCtx, ConstantUtils.Api.SERVER_DOMAIN, IApi::class.java)
 
     @SuppressLint("CheckResult")
     override fun loadInitial(

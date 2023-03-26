@@ -2,7 +2,7 @@ package com.ktpractice.flow.main.repository
 
 import android.content.Context
 import androidx.paging.PagedList
-import com.example.test.api.ApiInstMgr
+import com.ktpractice.api.ApiInstMgr
 import com.ktpractice.api.interfaces.IApi
 import com.ktpractice.db.PersonDao
 import com.ktpractice.model.Person
@@ -16,7 +16,7 @@ class PersonListBoundaryCallback(mCtx: Context, val mDao:PersonDao) :
     PagedList.BoundaryCallback<Person>() {
 
     private var mIApi: IApi? =
-        ApiInstMgr.getInstnace(mCtx, ConstantUtils.Api.SERVER_DOMAIN, IApi::class.java)
+        ApiInstMgr.getInstance(mCtx, ConstantUtils.Api.SERVER_DOMAIN, IApi::class.java)
     private val mDispose: CompositeDisposable = CompositeDisposable()
     private var mTeamName = ""
     private var mNextPage = 0

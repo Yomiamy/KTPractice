@@ -1,6 +1,8 @@
-package com.example.test.api
+package com.ktpractice.api
 
 import android.content.Context
+import com.example.test.api.Client
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -9,12 +11,12 @@ import java.util.concurrent.ConcurrentHashMap
 
 class ApiInstMgr {
     companion object {
-        val sUrlRetroMap = ConcurrentHashMap<String , Retrofit>()
-        val sGson = GsonBuilder()
+        private val sUrlRetroMap = ConcurrentHashMap<String , Retrofit>()
+        private val sGson: Gson = GsonBuilder()
             .setLenient()
             .create()
 
-        fun <InterfaceTypeClz> getInstnace(ctx: Context, serverUrl: String, apiInterfClz: Class<InterfaceTypeClz>): InterfaceTypeClz? {
+        fun <InterfaceTypeClz> getInstance(ctx: Context, serverUrl: String, apiInterfaceClz: Class<InterfaceTypeClz>): InterfaceTypeClz? {
             if (!sUrlRetroMap.contains(serverUrl)) {
                 val retrofit = Retrofit.Builder()
                     .baseUrl(serverUrl)
@@ -24,7 +26,7 @@ class ApiInstMgr {
                     .build()
                 sUrlRetroMap[serverUrl] = retrofit
             }
-            return sUrlRetroMap[serverUrl]?.create(apiInterfClz)
+            return sUrlRetroMap[serverUrl]?.create(apiInterfaceClz)
         }
     }
 }
