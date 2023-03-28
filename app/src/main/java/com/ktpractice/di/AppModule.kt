@@ -1,37 +1,25 @@
 package com.ktpractice.di
 
-import android.content.Context
 import androidx.room.Room
 import com.ktpractice.db.MIGRATION_1_2
-import com.ktpractice.db.PersonDao
 import com.ktpractice.db.PersonDb
-import com.ktpractice.flow.main.repository.IMainRepository
 import com.ktpractice.flow.main.repository.MainRepository
+import com.ktpractice.flow.main.viewmodel.MainViewModel
 import com.ktpractice.utils.ConstantUtils
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import org.koin.android.ext.koin.androidContext
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
 object AppModule {
-    @Singleton
-    @Provides
-    fun provideContext(@ApplicationContext context: Context): Context = context
+    val viewModule = module {
+        factory { MainViewModel(get()) }
+    }
 
-    @Singleton
-    @Provides
-    fun providePersonDao(context: Context): PersonDao = Room
-        .databaseBuilder(context, PersonDb::class.java, ConstantUtils.AppInfo.DB_NAME)
-        .addMigrations(MIGRATION_1_2)
-        .fallbackToDestructiveMigration()
-        .build()
-        .personDao()
-
-    @Singleton
-    @Provides
-    fun provideMainRepository(context: Context, dao: PersonDao): IMainRepository = MainRepository(context, dao)
+    val repositoryModule = module {
+        single { MainRepository(androidContext(), get()) }
+        single { Room.databaseBuilder(androidContext(), PersonDb::class.java, ConstantUtils.AppInfo.DB_NAME)
+            .addMigrations(MIGRATION_1_2)
+            .fallbackToDestructiveMigration()
+            .build()
+            .personDao() }
+    }
 }
