@@ -16,11 +16,13 @@ import com.ktpractice.flow.main.viewmodel.MainViewModel
 import com.ktpractice.utils.Utils
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
+    private val mViewModel: MainViewModel by viewModel()
+
     private lateinit var mBinding:ActivityMainBinding
-    private val mViewModel: MainViewModel by viewModels()
     private lateinit var mTeamNameAry:Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
