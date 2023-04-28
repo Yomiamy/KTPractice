@@ -19,4 +19,14 @@ object Utils {
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
     }
+
+    // TODO: For test
+    fun validLogin(account: String, pw: String): Boolean {
+        if (account.length < 6) {
+            return false
+        } else if (pw.length < 8) {
+            return false
+        }
+        return true
+    }
 }
