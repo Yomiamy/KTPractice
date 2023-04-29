@@ -6,6 +6,10 @@ import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.mockito.AdditionalMatchers.not
+import org.mockito.Matchers
+import org.mockito.Mockito
+import org.mockito.internal.stubbing.answers.ThrowsException
 
 class UtilsTest {
 
@@ -18,7 +22,7 @@ class UtilsTest {
     }
 
     @Test
-    fun validLogin() {
+    fun validLogin1() {
         val result1 = Utils.validLogin("123456", "12345678")
         assertEquals(true, result1)
 
@@ -27,5 +31,21 @@ class UtilsTest {
 
         val result3 = Utils.validLogin("123456", "1234567")
         assertEquals(false, result3)
+    }
+
+    @Test
+    fun validLogin2() {
+        val loginService = Mockito.mock(ILoginService::class.java)
+        val authManager = AuthManager(loginService)
+
+        // Arrange
+        Mockito.`when`(loginService.login("123456", "12345678")).thenReturn(true)
+
+        // Act
+        val result = authManager.login("123456", "12345678")
+
+        // Asset
+//        Mockito.verify(loginService).login("123456", "1234567")
+        assertEquals(true, result)
     }
 }
