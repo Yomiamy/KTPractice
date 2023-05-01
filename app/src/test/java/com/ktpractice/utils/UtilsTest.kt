@@ -1,5 +1,9 @@
 package com.ktpractice.utils
 
+import io.mockk.MockK
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Assert.*
 
 import org.junit.After
@@ -46,6 +50,19 @@ class UtilsTest {
 
         // Asset
 //        Mockito.verify(loginService).login("123456", "1234567")
+        assertEquals(true, result)
+    }
+
+    @Test
+    fun validLogin3() {
+        val loginService = mockk<ILoginService>()
+        val authManager = AuthManager(loginService)
+
+        every { loginService.login(any(), any()) } returns true
+
+        val result = authManager.login("123456", "12345678")
+
+//        verify { loginService.login("12345ˊ", "12345678") }
         assertEquals(true, result)
     }
 }
