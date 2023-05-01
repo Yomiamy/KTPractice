@@ -1,9 +1,6 @@
 package com.ktpractice.utils
 
-import io.mockk.MockK
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import org.junit.Assert.*
 
 import org.junit.After
@@ -35,6 +32,15 @@ class AuthTest {
 
         val result3 = Utils.validLogin("123456", "1234567")
         assertEquals(false, result3)
+
+        mockkObject(Utils).run {
+            every { Utils.validLogin("123", "123") } returns true
+
+            val mockResult = Utils.validLogin("123", "123")
+            assertEquals(false, mockResult)
+        }
+
+
     }
 
     @Test
