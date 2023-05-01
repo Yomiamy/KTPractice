@@ -15,7 +15,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito
 import org.mockito.internal.stubbing.answers.ThrowsException
 
-class UtilsTest {
+class AuthTest {
 
     @Before
     fun setUp() {
