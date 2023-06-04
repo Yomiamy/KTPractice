@@ -1,9 +1,17 @@
 package com.ktpractice.flow.main.view
 
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.viewpager.widget.ViewPager
 import com.ktpractice.R
 import androidx.core.content.ContextCompat
@@ -28,6 +36,53 @@ class MainActivity : AppCompatActivity() {
     private val mViewModel: MainViewModel by viewModels()
     private lateinit var mTeamNameAry:Array<String>
 
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            hasNotificationPermissionGranted = isGranted
+            if (!isGranted) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (Build.VERSION.SDK_INT >= 33) {
+                        if (shouldShowRequestPermissionRationale(android.Manifest.permission.POST_NOTIFICATIONS)) {
+                            showNotificationPermissionRationale()
+                        } else {
+                            showSettingDialog()
+                        }
+                    }
+                }
+            } else {
+                Toast.makeText(applicationContext, "notification permission granted", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+
+    private fun showSettingDialog() {
+        AlertDialog.Builder(this).create().apply {
+            setTitle("Notification Permission")
+            setMessage("Notification permission is required, Please allow notification permission from setting")
+            setButton(DialogInterface.BUTTON_POSITIVE, "OK") { _, _ ->
+                val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.parse("package:$packageName")
+                startActivity(intent)
+            }
+            setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel") {_, _ -> dismiss()}
+        }.run { show() }
+    }
+
+    private fun showNotificationPermissionRationale() {
+        AlertDialog.Builder(this).create().apply {
+            setTitle("Alert")
+            setMessage("Notification permission is required, to show notification")
+            setButton(DialogInterface.BUTTON_POSITIVE, "OK") { _, _ ->
+                if (Build.VERSION.SDK_INT >= 33) {
+                    notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+            setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel") {_, _ -> dismiss()}
+        }.run { show() }
+    }
+
+    var hasNotificationPermissionGranted = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -42,6 +97,8 @@ class MainActivity : AppCompatActivity() {
         initListener()
         initData()
         initObserver()
+
+        notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
     }
 
     private fun initView() {
