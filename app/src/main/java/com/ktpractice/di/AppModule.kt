@@ -1,6 +1,8 @@
 package com.ktpractice.di
 
 import androidx.room.Room
+import com.ktpractice.api.ApiInstMgr
+import com.ktpractice.api.interfaces.IApi
 import com.ktpractice.db.MIGRATION_1_2
 import com.ktpractice.db.PersonDb
 import com.ktpractice.flow.main.repository.MainRepository
@@ -15,11 +17,12 @@ object AppModule {
     }
 
     val repositoryModule = module {
-        single { MainRepository(androidContext(), get()) }
+        single { MainRepository(get(), get()) }
         single { Room.databaseBuilder(androidContext(), PersonDb::class.java, ConstantUtils.AppInfo.DB_NAME)
             .addMigrations(MIGRATION_1_2)
             .fallbackToDestructiveMigration()
             .build()
             .personDao() }
+        single { ApiInstMgr.getInstance(get(), ConstantUtils.Api.SERVER_DOMAIN, IApi::class.java) }
     }
 }
