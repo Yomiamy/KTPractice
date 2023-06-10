@@ -3,20 +3,21 @@ package com.ktpractice
 import android.app.Application
 import android.content.Context
 import androidx.multidex.MultiDex
-import com.ktpractice.di.SampleClz
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import com.ktpractice.di.AppModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
-@HiltAndroidApp
 class KtPraticeApplication:Application() {
-
-    @Inject
-    lateinit var mSampleClz: SampleClz
 
     override fun onCreate() {
         super.onCreate()
 
-        mSampleClz.test()
+        startKoin{
+            androidLogger()
+            androidContext(this@KtPraticeApplication)
+            modules(AppModule.viewModule, AppModule.repositoryModule)
+        }
     }
 
     override fun attachBaseContext(base: Context?) {
