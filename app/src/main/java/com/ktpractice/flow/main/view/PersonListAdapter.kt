@@ -96,6 +96,14 @@ class PersonListAdapter(private val mCtx: Context) :
                         .deleteCharAt(strBuilder.length - 1)
                         .toString()
                 }
+
+                mClPersonContentLayout.setOnClickListener {
+                    Intent(mCtx, ProfileActivity::class.java).apply {
+                        putExtra(EXTRA_KEY_PERSON, item)
+                    }.run {
+                        mCtx.startActivity(this)
+                    }
+                }
             } else if (type == "banner") {
                 mIvBanner.visibility = VISIBLE
                 Glide.with(mCtx).load(url).into(mIvBanner)
