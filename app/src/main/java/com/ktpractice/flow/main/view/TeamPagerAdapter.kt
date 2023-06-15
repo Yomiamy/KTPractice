@@ -13,7 +13,7 @@ import androidx.viewpager.widget.PagerAdapter
 import com.ktpractice.R
 import com.ktpractice.model.Person
 
-class TeamPagerAdapter(val mCtx: Context, val mTabTeamNameArray: Array<String>) : PagerAdapter() {
+class TeamPagerAdapter(private val mCtx: Context, private val mTabTeamNameArray: Array<String>) : PagerAdapter() {
 
     private lateinit var mCurRvList: RecyclerView
     private var mRvList: ArrayList<RecyclerView> = ArrayList()
@@ -54,21 +54,13 @@ class TeamPagerAdapter(val mCtx: Context, val mTabTeamNameArray: Array<String>) 
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return mTabTeamNameArray.get(position)
+        return mTabTeamNameArray[position]
     }
 
     fun addContentList(team: String, personList: PagedList<Person>?) {
-        val index = mTabTeamNameArray.let {
-            var index = -1
-
-            for (key in mTabTeamNameArray) {
-                ++index
-                if (TextUtils.equals(key, team)) break
-            }
-            index
-        }
-        mCurRvList = mRvList.get(index)
-        var adapter: PersonListAdapter = if (index == -1 || mCurRvList.adapter == null) PersonListAdapter(mCtx) else (mCurRvList.adapter as PersonListAdapter)
+        val index = mTabTeamNameArray.indexOf(team)
+        mCurRvList = mRvList[index]
+        var adapter: PersonListAdapter = if (mCurRvList.adapter == null) PersonListAdapter(mCtx) else (mCurRvList.adapter as PersonListAdapter)
         mCurRvList.adapter = adapter
         adapter.submitList(personList)
     }
