@@ -1,6 +1,7 @@
 package com.ktpractice.flow.main.view
 
 import android.content.Context
+import android.content.Intent
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +11,34 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ktpractice.R
 import com.ktpractice.flow.main.view.PersonListAdapter.ViewHolder
+import com.ktpractice.flow.profile.view.ProfileActivity
+import com.ktpractice.flow.profile.view.ProfileActivity.Companion.EXTRA_KEY_PERSON
 import com.ktpractice.model.Person
 import de.hdodenhof.circleimageview.CircleImageView
 import java.lang.StringBuilder
 
 class PersonListAdapter(private val mCtx: Context) :
-    PagedListAdapter<Person, ViewHolder>(Person.DIFF_CALLBACK) {
+    PagedListAdapter<Person, ViewHolder>(DIFF_CALLBACK) {
+
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Person>() {
+            // Person details may have changed , but ID is fixed.
+            override fun areItemsTheSame(
+                oldPerson: Person,
+                newPerson: Person
+            ) = (oldPerson.id == newPerson.id)
+
+            override fun areContentsTheSame(
+                oldPerson: Person,
+                newPerson: Person
+            ) = oldPerson == newPerson
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var itemLayout = LayoutInflater.from(mCtx).inflate(R.layout.list_item_person, parent, false)
