@@ -21,4 +21,9 @@
         <item name="android:maxLines">1</item>
     </style>
 
+    <declare-styleable name="UserIconImageView">
+        <attr name="imgSrc" format="string"/>
+        <attr name="imgSize" format="dimension"/>
+    </declare-styleable>
+
 </resources>
