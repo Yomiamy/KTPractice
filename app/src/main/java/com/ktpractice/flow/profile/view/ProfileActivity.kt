@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.ktpractice.R
+import com.ktpractice.databinding.ActivityProfileBinding
 import com.ktpractice.model.Person
 
 class ProfileActivity : AppCompatActivity() {
@@ -15,11 +16,13 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private var mPerson: Person? = null
+    private lateinit var mBinding: ActivityProfileBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_profile)
+        mBinding = ActivityProfileBinding.inflate(layoutInflater)
+        setContentView(mBinding.root)
 
         initData()
     }
@@ -31,7 +34,6 @@ class ProfileActivity : AppCompatActivity() {
             intent.getParcelableExtra(EXTRA_KEY_PERSON) as Person?
         }
 
-        // TODO: 到此
-        Log.d("", "")
+        mBinding.uivUserIcon.imgSrc = if (!mPerson!!.avatar.isNullOrEmpty()) mPerson!!.avatar!! else mPerson!!.url!!
     }
 }
