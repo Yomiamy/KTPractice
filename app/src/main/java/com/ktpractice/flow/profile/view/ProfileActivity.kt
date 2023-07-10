@@ -35,5 +35,6 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         mBinding.uivUserIcon.imgSrc = if (!mPerson!!.avatar.isNullOrEmpty()) mPerson!!.avatar!! else mPerson!!.url!!
+        mBinding.tvName.text = mPerson!!.name
     }
 }
