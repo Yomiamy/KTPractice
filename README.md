@@ -9,6 +9,6 @@ Include:
 5. Room
 6. Other Kotlin syntax
 
-![image](https://github.com/YomiRY/KtPractice/blob/master/ScreenShot.png)
+![image](https://github.com/Yomiamy/KtPractice/blob/main/ScreenShot.png)
 
 
