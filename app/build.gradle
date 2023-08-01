@@ -119,6 +119,9 @@ dependencies {
     debugImplementation 'com.readystatesoftware.chuck:library:1.1.0'
     releaseImplementation 'com.readystatesoftware.chuck:library-no-op:1.1.0'
 
+    // Leakcanary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
+
     // Koin
     implementation "io.insert-koin:koin-android:3.4.0"
 }
