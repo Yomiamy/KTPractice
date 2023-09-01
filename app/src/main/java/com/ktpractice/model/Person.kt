@@ -1,5 +1,7 @@
 package com.ktpractice.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
 import androidx.room.*
 import com.ktpractice.db.PersonTypeConvert
@@ -16,23 +18,32 @@ data class Person(
     var expertise: List<String>?,
     var avatar: String?,
     var url: String?,
-    var teamName:String,
+    var teamName:String?,
     var address:String?
-) {
-    companion object {
-        val DIFF_CALLBACK = object :
-            DiffUtil.ItemCallback<Person>() {
-            // Person details may have changed , but ID is fixed.
-            override fun areItemsTheSame(
-                oldPerson: Person,
-                newPerson: Person
-            ) = (oldPerson.id == newPerson.id)
+) : Parcelable {
 
-            override fun areContentsTheSame(
-                oldPerson: Person,
-                newPerson: Person
-            ) = oldPerson == newPerson
+    companion object CREATOR : Parcelable.Creator<Person> {
+        override fun createFromParcel(parcel: Parcel): Person {
+            return Person(parcel)
         }
+
+        override fun newArray(size: Int): Array<Person?> {
+            return arrayOfNulls(size)
+        }
+    }
+
+    constructor(parcel: Parcel) : this(
+        parcel.readInt(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.createStringArrayList(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString()
+    ) {
     }
 
     override fun equals(other: Any?): Boolean {
@@ -48,5 +59,22 @@ data class Person(
         ))
                 && this.avatar == otherPerson.avatar
                 && this.url == otherPerson.url
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(rowId)
+        parcel.writeString(id)
+        parcel.writeString(type)
+        parcel.writeString(name)
+        parcel.writeString(position)
+        parcel.writeStringList(expertise)
+        parcel.writeString(avatar)
+        parcel.writeString(url)
+        parcel.writeString(teamName)
+        parcel.writeString(address)
+    }
+
+    override fun describeContents(): Int {
+        return 0
     }
 }

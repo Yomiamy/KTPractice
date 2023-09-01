@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".flow.profile.view.ProfileActivity">
+
+    <LinearLayout
+        android:id="@+id/ll_profile_head"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:background="@color/blue_1"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.ktpractice.flow.main.view.UserIconImageView
+            android:id="@+id/uiv_user_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            app:imgSize="150dp" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:text="name"
+            android:textColor="@color/white_1"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_profile_attrs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        app:cardCornerRadius="13dp"
+        app:layout_constraintBottom_toBottomOf="@id/ll_profile_head"
+        app:layout_constraintTop_toBottomOf="@+id/ll_profile_head">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingTop="20dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="20dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_photo_count_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Photos"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_photo_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:text="105"
+                    android:textColor="@color/blue_2"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_follower_count_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Followers"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_follower_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:text="75"
+                    android:textColor="@color/blue_2"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_following_count_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Following"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_following_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:text="105"
+                    android:textColor="@color/blue_2"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/cv_profile_attrs"
+        app:layout_constraintTop_toBottomOf="@id/cv_profile_attrs">
+        <LinearLayout
+            android:id="@+id/ll_mail"
+            style="@style/style_profile_bottom_item_layout">
+
+            <ImageView
+                style="@style/style_profile_bottom_item_icon"
+                android:src="@android:drawable/ic_menu_info_details" />
+
+            <TextView
+                style="@style/style_profile_bottom_item_text"
+                android:text="oooxxx@gmail.com" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_phone"
+            style="@style/style_profile_bottom_item_layout">
+
+            <ImageView
+                style="@style/style_profile_bottom_item_icon"
+                android:src="@android:drawable/ic_menu_call" />
+
+            <TextView
+                style="@style/style_profile_bottom_item_text"
+                android:text="+222 02 202 202" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_group"
+            style="@style/style_profile_bottom_item_layout">
+
+            <ImageView
+                style="@style/style_profile_bottom_item_icon"
+                android:src="@android:drawable/ic_menu_agenda" />
+
+            <TextView
+                style="@style/style_profile_bottom_item_text"
+                android:text="Weekly Plans" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_comment"
+            style="@style/style_profile_bottom_item_layout">
+
+            <ImageView
+                style="@style/style_profile_bottom_item_icon"
+                android:src="@android:drawable/ic_menu_my_calendar" />
+
+            <TextView
+                style="@style/style_profile_bottom_item_text"
+                android:text="Show All Comments" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

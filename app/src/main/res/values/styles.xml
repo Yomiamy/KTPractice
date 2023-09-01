@@ -10,6 +10,7 @@
         <item name="android:windowActionBar">false</item>
     </style>
 
+    <!-- Person item style -->
     <style name="style_person_text_content">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -20,5 +21,35 @@
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
     </style>
+
+    <!-- Profile item style -->
+    <style name="style_profile_bottom_item_layout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginTop">20dp</item>
+    </style>
+
+    <style name="style_profile_bottom_item_icon">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="tint">@color/blue_1</item>
+    </style>
+
+    <style name="style_profile_bottom_item_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black_1</item>
+    </style>
+
+    <!-- UserIconImageView attributes -->
+    <declare-styleable name="UserIconImageView">
+        <attr name="imgSrc" format="string" />
+        <attr name="imgSize" format="dimension" />
+    </declare-styleable>
 
 </resources>
