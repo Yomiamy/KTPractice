@@ -65,6 +65,4 @@ class TeamPagerAdapter(private val mCtx: Context, private val mTabTeamNameArray:
         mCurRvList.adapter = adapter
         adapter.submitData(personList)
     }
-
-    fun getCurListItemCount():Int = mCurRvList.adapter?.itemCount ?: 0
 }

@@ -19,11 +19,10 @@ class MainViewModel(private val mRepository: MainRepository): ViewModel() {
 
     fun loadPageByTeamName(teamName: String) {
         viewModelScope.launch {
-            mRepository.searchedTeamName = teamName
-
-            Pager(PagingConfig(pageSize = PERSON_LIST_PAGE_SIZE)) { mRepository.pagingSource }
-                .flow
-                .cachedIn(viewModelScope).collectLatest {
+            Pager(PagingConfig(pageSize = PERSON_LIST_PAGE_SIZE)) {
+                mRepository.searchedTeamName = teamName
+                mRepository.pagingSource
+            }.flow.cachedIn(viewModelScope).collectLatest {
                     mMainPageUiState.value = MainPageUiState(teamName, it)
                 }
         }

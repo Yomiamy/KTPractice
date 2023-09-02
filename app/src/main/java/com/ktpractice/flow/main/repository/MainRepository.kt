@@ -3,8 +3,7 @@ package com.ktpractice.flow.main.repository
 import com.ktpractice.api.interfaces.IApi
 import com.ktpractice.db.PersonDao
 
-class MainRepository(private val mDao:PersonDao,
-                     private val mIApi: IApi) {
+class MainRepository(mDao:PersonDao, mIApi: IApi) {
 
     private val personPagingSource = PersonPagingSource(mDao, mIApi)
 
