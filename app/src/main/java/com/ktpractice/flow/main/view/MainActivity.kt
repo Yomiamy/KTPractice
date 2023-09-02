@@ -36,8 +36,8 @@ class MainActivity : AppCompatActivity() {
 
         initView()
         initListener()
-        initData()
         initObserver()
+        initData()
     }
 
     private fun initView() {
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.mainPageUiState.collectLatest { state ->
                     if(state == null
-                        || state.teamName.isNullOrEmpty()
+                        || state.teamName.isNullOrEmpty()) {
                         return@collectLatest
                     }
 
