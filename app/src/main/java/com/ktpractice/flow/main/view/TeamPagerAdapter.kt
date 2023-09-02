@@ -57,12 +57,9 @@ class TeamPagerAdapter(private val mCtx: Context, private val mTabTeamNameArray:
         return mTabTeamNameArray[position]
     }
 
-    fun addContentList(team: String, personList: PagedList<Person>?) {
         val index = mTabTeamNameArray.indexOf(team)
         mCurRvList = mRvList[index]
-        var adapter: PersonListAdapter = if (mCurRvList.adapter == null) PersonListAdapter(mCtx) else (mCurRvList.adapter as PersonListAdapter)
         mCurRvList.adapter = adapter
-        adapter.submitList(personList)
     }
 
     fun getCurListItemCount():Int = mCurRvList.adapter?.itemCount ?: 0

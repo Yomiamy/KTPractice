@@ -60,9 +60,6 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.3.4"
 
     // Jetpack - Paging
-    implementation "androidx.paging:paging-runtime-ktx:2.1.0" // For Kotlin use paging-runtime-ktx
-    // optional - RxJava support
-    implementation "androidx.paging:paging-rxjava2-ktx:2.1.0" // For Kotlin use paging-rxjava2-ktx
 
     // Jetpack - Room
     implementation "androidx.room:room-ktx:2.1.0"
