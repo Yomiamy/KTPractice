@@ -36,8 +36,8 @@ class MainActivity : AppCompatActivity() {
 
         initView()
         initListener()
-        initData()
         initObserver()
+        initData()
     }
 
     private fun initView() {
@@ -64,7 +64,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun initData() {
         mViewModel.loadPageByTeamName(mTeamNameAry[0])
-        mViewModel.calculateNextPage(0)
     }
 
     private fun initObserver() {
@@ -72,14 +71,12 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.mainPageUiState.collectLatest { state ->
                     if(state == null
-                        || state.teamName.isNullOrEmpty()
-                        || state.personList.isNullOrEmpty()) {
+                        || state.teamName.isNullOrEmpty()) {
                         return@collectLatest
                     }
 
                     val pageAdapter = (mBinding.vpViewPager.adapter as TeamPagerAdapter)
                     pageAdapter.addContentList(state.teamName, state.personList)
-                    mViewModel.calculateNextPage(pageAdapter.getCurListItemCount())
                 }
             }
         }

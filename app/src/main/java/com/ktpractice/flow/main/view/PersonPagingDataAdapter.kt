@@ -2,29 +2,23 @@ package com.ktpractice.flow.main.view
 
 import android.content.Context
 import android.content.Intent
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.*
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ktpractice.R
-import com.ktpractice.flow.main.view.PersonListAdapter.ViewHolder
 import com.ktpractice.flow.profile.view.ProfileActivity
-import com.ktpractice.flow.profile.view.ProfileActivity.Companion.EXTRA_KEY_PERSON
 import com.ktpractice.model.Person
 import de.hdodenhof.circleimageview.CircleImageView
 import java.lang.StringBuilder
 
-class PersonListAdapter(private val mCtx: Context) :
-    PagedListAdapter<Person, ViewHolder>(DIFF_CALLBACK) {
-
+class PersonPagingDataAdapter(private val mCtx: Context): PagingDataAdapter<Person, PersonPagingDataAdapter.ViewHolder>(DIFF_CALLBACK) {
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Person>() {
             // Person details may have changed , but ID is fixed.
@@ -76,10 +70,10 @@ class PersonListAdapter(private val mCtx: Context) :
             val url = if (!item.avatar.isNullOrEmpty()) item.avatar else item.url
             val type = item.type
 
-            mClPersonContentLayout.visibility = INVISIBLE
-            mIvBanner.visibility = GONE
+            mClPersonContentLayout.visibility = View.INVISIBLE
+            mIvBanner.visibility = View.GONE
             if (type == "employee") {
-                mClPersonContentLayout.visibility = VISIBLE
+                mClPersonContentLayout.visibility = View.VISIBLE
 
                 Glide.with(mCtx).load(url).centerCrop().into(mCivPersonAvatar)
                 mTvPersonName.text = item.name
@@ -99,13 +93,13 @@ class PersonListAdapter(private val mCtx: Context) :
 
                 mClPersonContentLayout.setOnClickListener {
                     Intent(mCtx, ProfileActivity::class.java).apply {
-                        putExtra(EXTRA_KEY_PERSON, item)
+                        putExtra(ProfileActivity.EXTRA_KEY_PERSON, item)
                     }.run {
                         mCtx.startActivity(this)
                     }
                 }
             } else if (type == "banner") {
-                mIvBanner.visibility = VISIBLE
+                mIvBanner.visibility = View.VISIBLE
                 Glide.with(mCtx).load(url).into(mIvBanner)
             }
         }

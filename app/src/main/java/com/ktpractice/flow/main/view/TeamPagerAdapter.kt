@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.contains
 import androidx.paging.PagedList
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
@@ -57,13 +58,11 @@ class TeamPagerAdapter(private val mCtx: Context, private val mTabTeamNameArray:
         return mTabTeamNameArray[position]
     }
 
-    fun addContentList(team: String, personList: PagedList<Person>?) {
+    suspend fun addContentList(team: String, personList: PagingData<Person>) {
         val index = mTabTeamNameArray.indexOf(team)
         mCurRvList = mRvList[index]
-        var adapter: PersonListAdapter = if (mCurRvList.adapter == null) PersonListAdapter(mCtx) else (mCurRvList.adapter as PersonListAdapter)
+        var adapter: PersonPagingDataAdapter = if (mCurRvList.adapter == null) PersonPagingDataAdapter(mCtx) else (mCurRvList.adapter as PersonPagingDataAdapter)
         mCurRvList.adapter = adapter
-        adapter.submitList(personList)
+        adapter.submitData(personList)
     }
-
-    fun getCurListItemCount():Int = mCurRvList.adapter?.itemCount ?: 0
 }
