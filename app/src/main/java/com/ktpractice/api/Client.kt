@@ -3,7 +3,6 @@ package com.example.test.api
 import android.content.Context
 import android.util.Log
 import com.facebook.stetho.okhttp3.StethoInterceptor
-import com.ktpractice.BuildConfig
 import com.ktpractice.utils.ConstantUtils
 import com.ktpractice.utils.ConstantUtils.Network.DEFAULT_TIMEOUT
 import com.readystatesoftware.chuck.ChuckInterceptor
