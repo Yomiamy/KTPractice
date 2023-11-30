@@ -56,7 +56,7 @@
                 app:tabTextColor="@android:color/white" />
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.viewpager.widget.ViewPager
+        <com.ktpractice.component.NonSwipeableViewPager
             android:id="@+id/vp_view_pager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
