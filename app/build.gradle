@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    namespace 'com.ktpractice'
+    namespace 'com.imformation_checker'
 
     compileSdkVersion 35
 

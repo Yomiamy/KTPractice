@@ -14,7 +14,7 @@
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.ktpractice.flow.main.view.UserIconImageView
+        <com.imformation_checker.flow.main.view.UserIconImageView
             android:id="@+id/uiv_user_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
