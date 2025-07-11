@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="view_model" type="com.ktpractice.flow.main.viewmodel.MainViewModel" />
+        <variable name="view_model" type="com.imformation_checker.flow.main.viewmodel.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.ktpractice.flow.main.view.MainActivity">
+        tools:context="com.imformation_checker.flow.main.view.MainActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
